@@ -990,6 +990,9 @@ class ApplicationMain {
     IpcMainEventChannel.account.handleLogout(() => this.logout());
     IpcMainEventChannel.account.handleWwwAuthToken(() => this.daemonRpc.getWwwAuthToken());
     IpcMainEventChannel.account.handleUpdateAccountData(() => this.updateAccountData());
+    IpcMainEventChannel.account.handleSubmitVoucher((voucherCode: string) =>
+      this.daemonRpc.submitVoucher(voucherCode),
+    );
 
     IpcMainEventChannel.accountHistory.handleRemoveItem(async (token: AccountToken) => {
       await this.daemonRpc.removeAccountFromHistory(token);
