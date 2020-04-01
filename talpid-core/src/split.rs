@@ -169,7 +169,7 @@ impl SplitTunnel {
             }
         }
 
-        write!(file, "{} {}", self.table_id, ROUTING_TABLE_NAME).map_err(Error::RoutingTableSetup)
+        writeln!(file, "{} {}", self.table_id, ROUTING_TABLE_NAME).map_err(Error::RoutingTableSetup)
     }
 
     /// Reset the split-tunneling routing table to its default state
