@@ -134,6 +134,17 @@ fi
 ./wireguard/build-wireguard-go.sh
 
 echo "Building Rust code in release mode using $RUSTC_VERSION..."
+
+if [[ ("$(uname -s)" == "Darwin") || ("$(uname -s)" == "Linux") ]]; then
+    pushd mullvad-cli
+    for sh in bash zsh; do
+        echo "Generating shell completion script for $sh..."
+        cargo +stable run $CARGO_ARGS --release --features shell-completions -- \
+            shell-completions "$sh" "$SCRIPT_DIR/dist-assets/"
+    done
+    popd
+fi
+
 MULLVAD_ADD_MANIFEST="1" cargo +stable build $CARGO_ARGS --release
 
 ################################################################################
@@ -197,13 +208,6 @@ fi
 
 
 ./update-relays.sh
-
-if [[ ("$(uname -s)" == "Darwin") || ("$(uname -s)" == "Linux") ]]; then
-    echo "Generating shell completion scripts..."
-    for sh in bash zsh; do
-        "$CARGO_TARGET_DIR/release/mullvad" shell-completions "$sh" "$SCRIPT_DIR/dist-assets/"
-    done
-fi
 
 pushd "$SCRIPT_DIR/gui"
 
