@@ -373,9 +373,9 @@ class ApplicationMain {
         this.setMacOsAppMenu();
         break;
       case 'linux':
-        this.installGenericMenubarAppWindowHandlers(tray, windowController);
         this.installLinuxWindowCloseHandler(windowController);
         this.setLinuxAppMenu();
+        this.setLinuxTrayMenu(tray, windowController);
         window.setMenuBarVisibility(false);
         break;
       default:
@@ -1345,6 +1345,19 @@ class ApplicationMain {
       },
     ];
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+  }
+
+  private setLinuxTrayMenu(tray: Tray, windowController: WindowController) {
+    tray.setContextMenu(
+      Menu.buildFromTemplate([
+        {
+          label: 'Open Mullvad VPN',
+          click: () => {
+            windowController.show();
+          },
+        },
+      ]),
+    );
   }
 
   private addContextMenu(window: BrowserWindow) {
