@@ -373,9 +373,13 @@ class ApplicationMain {
         this.setMacOsAppMenu();
         break;
       case 'linux':
-        this.installGenericMenubarAppWindowHandlers(tray, windowController);
         this.installLinuxWindowCloseHandler(windowController);
         this.setLinuxAppMenu();
+        if (process.env.XDG_CURRENT_DESKTOP) {
+          this.setUnityTrayMenu(tray, windowController);
+        } else {
+          this.installGenericMenubarAppWindowHandlers(tray, windowController);
+        }
         window.setMenuBarVisibility(false);
         break;
       default:
@@ -1345,6 +1349,19 @@ class ApplicationMain {
       },
     ];
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+  }
+
+  private setUnityTrayMenu(tray: Tray, windowController: WindowController) {
+    tray.setContextMenu(
+      Menu.buildFromTemplate([
+        {
+          label: 'Mullvad VPN',
+          click: () => {
+            windowController.toggle();
+          },
+        },
+      ]),
+    );
   }
 
   private addContextMenu(window: BrowserWindow) {
